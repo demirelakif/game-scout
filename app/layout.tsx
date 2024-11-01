@@ -2,14 +2,24 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
+const gramatikaBold = localFont({
+  src: "./fonts/gramatikaBold.otf",
+  variable: "--font-bold",
   weight: "100 900",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const gramatikaBlack = localFont({
+  src: "./fonts/gramatikaBlack.otf",
+  variable: "--font-black",
+  weight: "100 900",
+});
+const gramatikaExtraLight = localFont({
+  src: "./fonts/gramatikaExtraLight.otf",
+  variable: "--font-extra-light",
+  weight: "100 900",
+});
+const gramatikaRegular = localFont({
+  src: "./fonts/gramatikaRegular.otf",
+  variable: "--font-regular",
   weight: "100 900",
 });
 
@@ -26,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${gramatikaBold.variable} ${gramatikaBlack.variable} ${gramatikaExtraLight.variable} ${gramatikaRegular.variable} bg-background antialiased`}
       >
         {children}
       </body>

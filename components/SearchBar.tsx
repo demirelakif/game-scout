@@ -19,7 +19,7 @@ function SearchBar() {
         console.log("submitted");
     };
     return (
-        <div className='w-full md:w-[40vw] lg:-[30vw]'>
+        <div className='w-[80vw] md:w-[40vw] lg:-[30vw]'>
             <PlaceholdersAndVanishInput
                 placeholders={placeholders}
                 onChange={handleChange}

@@ -1,8 +1,10 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
 import { FocusCards } from './ui/focus-cards';
+import { fetchGames } from '@/app/action';
 
-const GameLists = () => {
+async function GameLists() {
+    const data = await fetchGames();
     const cards = [
         {
             title: "Forest Adventure",
@@ -32,7 +34,7 @@ const GameLists = () => {
 
     return (
         <div className='pt-20'>
-            <FocusCards cards={cards} />
+            <FocusCards cards={data} />
         </div>
     );
 }

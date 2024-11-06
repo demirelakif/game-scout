@@ -2,14 +2,26 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FaComputer, FaXbox, FaPlaystation, FaApple, FaInternetExplorer, FaLinux } from "react-icons/fa6";
+import { FaComputer, FaXbox, FaPlaystation, FaApple, FaInternetExplorer, FaLinux, FaReddit, FaRocket, FaHeart, FaPlus, FaHeartCircleMinus, FaThumbsDown } from "react-icons/fa6";
 import { MdOutlineDesktopMac } from "react-icons/md";
 import { SiNintendoswitch } from "react-icons/si";
 import { DiAndroid } from "react-icons/di";
 import { SiSega } from "react-icons/si";
+import CircleButton from "../CircleButton";
+import GoatSvg from './goat.svg';
+import { FaMeh } from "react-icons/fa";
+import ImageCarousel from "./ImageCarousel";
+
 interface ShortScreenshots {
   id: number;
   image: string;
+}
+
+interface ratings {
+  id: number;
+  title: string;
+  count: number;
+  percent: number;
 }
 
 interface Store {
@@ -31,6 +43,14 @@ interface Platform {
 interface PlatformInfo {
   platform: Platform;
 }
+interface tags {
+  id: number;
+  name: string;
+  slug: string;
+  languages: string;
+  games_count: number;
+  image_background: string;
+}
 
 interface GameData {
   name: string;
@@ -42,6 +62,8 @@ interface GameData {
   parent_platforms: PlatformInfo[];
   metacritic: number;
   released: string;
+  ratings: ratings[];
+  tags: tags[];
 }
 
 // const uniquePlatforms = (platforms: PlatformInfo[]) => {
@@ -81,97 +103,147 @@ export const Card = React.memo(
     index: number;
     hovered: number | null;
     setHovered: React.Dispatch<React.SetStateAction<number | null>>;
-  }) => (
-    <div
-      onMouseEnter={() => setHovered(index)}
-      key={index}
-      onMouseLeave={() => setHovered(null)}
-      className={cn(
-        "rounded-lg relative bg-2 h-[40vh] w-[80vw] md:h-[30vh] md:w-[28vw] lg:h-[35vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer ",
-        hovered !== null && hovered === index && "scale-[1.2] z-10",
-        hovered !== null && hovered !== index && "-z-10 "
-      )}
-    >
+  }) => {
 
-      {/* <div
-        className={cn(
-          "absolute inset-0 bg-3 flex items-end py-8 px-4 transition-opacity duration-300",
-          hovered === index ? "opacity-100" : "opacity-0"
-        )}
-      >
+    const [currentIndex, setCurrentIndex] = useState(1);
 
-      </div> */}
+    // Carousel geçişini sağlamak için fonksiyon
+    const handleNext = () => {
+      if (currentIndex < card.short_screenshots.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        setCurrentIndex(0); // Başa sar
+      }
+    };
+
+    const handlePrev = () => {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      } else {
+        setCurrentIndex(card.short_screenshots.length - 1); // Sonraya geç
+      }
+    };
+
+    return (
       <div
+        onMouseEnter={() => setHovered(index)}
+        key={index}
+        onMouseLeave={() => setHovered(null)}
         className={cn(
-          "absolute bottom-0 left-2", // w-12 ve h-12 ekledik
+          "rounded-lg relative bg-2 h-[42vh] w-[80vw] md:h-[30vh] md:w-[28vw] lg:h-[35vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer ",
+          hovered !== null && hovered === index
+
+          && "scale-[1.2] transition-all duration-300 ease-linear z-10 h-[48vh] md:h-[35vh] lg:h-[42vh]",
+          hovered !== null && hovered !== index && "-z-10 "
         )}
       >
-        <h3 className="text-center text-white font-gramatikaExtraLight">{card.released.split("-")[0]}</h3>
-      </div>
 
-
-
-
-      <div
-        className={cn(
-          "absolute z-10 -top-3 -right-3 h-10 w-10 lg:-top-4 lg:-right-4 md:-top-3  md:-right-3 rounded-full md:w-12 md:h-12 lg:h-16 lg:w-16 flex items-center justify-center", // w-12 ve h-12 ekledik
-          card.metacritic > 90 && "bg-green-600",
-          card.metacritic > 80 && card.metacritic < 90 && "bg-green-400",
-          card.metacritic < 80 && card.metacritic > 70 && "bg-yellow-500",
-          card.metacritic < 70 && "bg-red-500"
-        )}
-      >
-        <h3 className="text-center text-white font-gramatikaBold">{card.metacritic}</h3>
-      </div>
-
-      {hovered == index ? (
-        <div className="bg-black flex rounded-md  ">
-          <div className="grid grid-cols-3 gap-2">
-            {card.short_screenshots.map((img, index) => (
+        {/* container col */}
+        <div className="text-2xl font-gramatikaBold flex flex-col items-start h-full w-full rounded-lg justify-normal">
+          {/* Photo frame */}
+          <div className="relative h-48 sm:h-72 md:h-44 lg:h-48 xl:h-56 w-full">
+            {hovered ==index ? (
+              <div className="relative h-full">
+                <ImageCarousel short_screenshots={card.short_screenshots} />
+                </div>
+            ) : (
               <Image
-                key={index}
-                src={img.image}
-                width={32}
-                height={32}
-                alt={`gallery-${index}`}
-                className="object-cover max-h-48 sm:max-h-72 md:max-h-44 lg:max-h-48 xl:max-h-56"
+                src={card.short_screenshots[0]?.image || '/placeholder.png'}
+                alt="gallery-0"
+                fill
+                objectFit="cover"
+                className="rounded-t-lg"
               />
-            ))}
+            )}
           </div>
+          {/* Title  */}
+          <h3 className="pl-1 ">
+            {card.name}
+          </h3>
+
+
+          {/* released year and platforms row */}
+          <div className="flex flex-row items-center justify-between px-1 w-full">
+            <h3 className="text-center text-lg text-white font-gramatikaExtraLight">{card.released.split("-")[0]}
+            </h3>
+            <div className="flex flex-row gap-2">
+              {card.parent_platforms.map((platform) => (
+                <div key={platform.platform.id}>
+                  {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={cn("pt-3 bottom-1 w-full px-1", index != hovered && "hidden")}>
+            <div className="flex justify-between bg-1 rounded-3xl">
+              <CircleButton onText="Add">
+                <FaPlus />
+              </CircleButton>
+              <CircleButton onText="GOAT">
+                <Image
+                  width={24}
+                  height={24}
+                  src={"/goat.svg"}
+                  alt="goat"
+                />
+              </CircleButton>
+
+              <CircleButton onText="Like">
+                <FaHeart color="#FF4D4D" />
+              </CircleButton>
+              <CircleButton onText="Meh">
+                <FaMeh color="#B0BEC5" />
+              </CircleButton>
+              <CircleButton onText="Dislike">
+                <FaThumbsDown color="#B22222" />
+              </CircleButton>
+            </div>
+
+            {
+              <div className="flex flex-row pt-2 overflow-x-clip text-nowrap">
+                {card.tags.map((tag) => (
+                  <div key={tag.id} className="px-1 py-1 rounded-full text-xs font-gramatikaExtraLight text-3 whitespace-nowrap transform transition-transform duration-300 hover:translate-x-2">
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+
+            }
+          </div>
+
+
         </div>
-      ) :
-        <Image
-          src={card.short_screenshots[0]?.image ? card.short_screenshots[0]?.image : "/placeholder.png"}
-          alt={card.short_screenshots[0]?.id.toString() ? card.short_screenshots[0]?.id.toString() : "placholder"}
-          fill
-          className="object-cover max-h-48 sm:max-h-72 md:max-h-44 lg:max-h-48 xl:max-h-56"
-        />}
 
-      <div className="absolute top-48 sm:top-72 md:top-44 lg:top-48 xl:top-56 left-1 text-2xl font-gramatikaBold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-200 ">
-        {card.name}
+
+
+        <div
+          className={cn(
+            "absolute z-10 -top-3 -right-3 h-10 w-10 lg:-top-4 lg:-right-4 md:-top-3  md:-right-3 rounded-full md:w-12 md:h-12 lg:h-16 lg:w-16 flex items-center justify-center", // w-12 ve h-12 ekledik
+            card.metacritic > 90 && "bg-green-600",
+            card.metacritic > 80 && card.metacritic < 90 && "bg-green-400",
+            card.metacritic < 80 && card.metacritic > 70 && "bg-yellow-500",
+            card.metacritic < 70 && "bg-red-500"
+          )}
+        >
+          <h3 className="text-center text-white font-gramatikaBold">{card.metacritic}</h3>
+        </div>
+
+
+
       </div>
-      <div className="absolute bottom-1 right-1 flex flex-row gap-2">
-        {card.parent_platforms.map((platform) => (
-          <div key={platform.platform.id}>
-            {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-            {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-          </div>
-        ))}
-      </div>
-
-
-
-    </div>
-  )
+    )
+  }
 );
+
 
 Card.displayName = "Card";
 

@@ -23,7 +23,6 @@ const ImageCarousel = ({ short_screenshots }: { short_screenshots: ShortScreensh
 
     const rect = divRef.current.getBoundingClientRect(); // Div'in ekran koordinatları
     const relativeX = mouseX - rect.left; // Mouse hareketinin div'in içindeki x pozisyonu
-    console.log(relativeX)
     // Ekranın sağ ve sol tarafındaki pozisyonlara göre geçişi yapıyoruz
     const newIndex = Math.floor((relativeX / rect.width) * short_screenshots.length);
     setCurrentIndex(Math.min(Math.max(newIndex, 0), short_screenshots.length - 1));
@@ -47,13 +46,13 @@ const ImageCarousel = ({ short_screenshots }: { short_screenshots: ShortScreensh
         objectFit="cover"
         className="rounded-t-lg transition-all duration-500 ease-in-out"
       />
-      <div className="absolute bottom-2 justify-center items-end left-1/2 transform -translate-x-1/2 text-4 flex">
+      <div className="absolute bottom-2 justify-center items-end left-1/2 transform -translate-x-1/2 text-4 flex w-full">
         {short_screenshots.map((image, index) => (
-          <div key={image.id} className="mx-1">
+          <div key={image.id} className="flex w-full justify-evenly">
             {index === currentIndex ? (
-              <FaCircle size={24} />
+              <FaCircle size={16} />
             ) : (
-              <FaCircleDot size={16} />
+              <FaCircleDot size={12} />
             )}
           </div>
         ))}

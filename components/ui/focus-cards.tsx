@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { FaComputer, FaXbox, FaPlaystation, FaApple, FaInternetExplorer, FaLinux, FaReddit, FaRocket, FaHeart, FaPlus, FaHeartCircleMinus, FaThumbsDown } from "react-icons/fa6";
 import { MdOutlineDesktopMac } from "react-icons/md";
@@ -52,7 +52,7 @@ interface tags {
   image_background: string;
 }
 
-interface GameData {
+export interface GameData {
   name: string;
   slug: string;
   playtime: number;
@@ -65,31 +65,6 @@ interface GameData {
   ratings: ratings[];
   tags: tags[];
 }
-
-// const uniquePlatforms = (platforms: PlatformInfo[]) => {
-//   // Benzersiz platform türlerini bulmak için bir Set oluşturuyoruz
-//   const platformTypes = new Set(
-//     platforms.map(p => {
-//       if (p.platform.slug.startsWith("playstation")) return "playstation";
-//       if (p.platform.slug.startsWith("xbox")) return "xbox";
-//       if (p.platform.slug.startsWith("pc")) return "pc";
-//       if (p.platform.slug.startsWith("nintendo")) return "nintendo";
-//       if (p.platform.slug.startsWith("android")) return "android";
-//       if (p.platform.slug.startsWith("ios")) return "ios";
-//       if (p.platform.slug.startsWith("android")) return "android";
-//       return null;
-//     }).filter(type => type !== null) // null olan değerleri filtreliyoruz
-//   );
-
-//   // Platform türlerine göre simgeleri döndür
-//   return Array.from(platformTypes).map(type => {
-//     if (type === "playstation") return <FaPlaystation key="playstation" />;
-//     if (type === "xbox") return <FaXbox key="xbox" />;
-//     if (type === "pc") return <FaComputer key="pc" />;
-//     if(type === "nintendo") return <SiNintendoswitch key={"nintendo"}/>
-//     return null;
-//   });
-// };
 
 
 export const Card = React.memo(
@@ -105,35 +80,31 @@ export const Card = React.memo(
     setHovered: React.Dispatch<React.SetStateAction<number | null>>;
   }) => {
 
-    const [currentIndex, setCurrentIndex] = useState(1);
+    useEffect(() => {
+      const handleScroll = () => {
+        setHovered(null); // Sayfa kaydırıldığında hovered state sıfırlanır
+      };
 
-    // Carousel geçişini sağlamak için fonksiyon
-    const handleNext = () => {
-      if (currentIndex < card.short_screenshots.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        setCurrentIndex(0); // Başa sar
-      }
-    };
+      window.addEventListener('scroll', handleScroll);
 
-    const handlePrev = () => {
-      if (currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-      } else {
-        setCurrentIndex(card.short_screenshots.length - 1); // Sonraya geç
-      }
-    };
+      // Event listener'ı component kaldırıldığında temizle
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
 
     return (
       <div
         onMouseEnter={() => setHovered(index)}
+        onMouseDown={() => setHovered(index)}
         key={index}
         onMouseLeave={() => setHovered(null)}
         className={cn(
-          "rounded-lg relative bg-2 h-[42vh] w-[80vw] md:h-[30vh] md:w-[28vw] lg:h-[35vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer ",
+          "rounded-lg relative bg-2 h-[35vh] sm:h-[42vh] w-[80vw] md:h-[30vh] md:w-[28vw] lg:h-[35vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer ",
           hovered !== null && hovered === index
 
-          && "scale-[1.2] transition-all duration-300 ease-linear z-10 h-[48vh] md:h-[35vh] lg:h-[42vh]",
+          && "scale-[1.2] transition-all duration-100 ease-linear z-10 h-[38vh] sm:h-[52vh] md:h-[35vh] lg:h-[42vh]",
+          card.name && card.name.replaceAll(" ", "").length > 29 && hovered !== null && hovered === index && "h-[50vh] md:h-[38vh] lg:h-[45vh]",
           hovered !== null && hovered !== index && "-z-10 "
         )}
       >
@@ -142,13 +113,13 @@ export const Card = React.memo(
         <div className="text-2xl font-gramatikaBold flex flex-col items-start h-full w-full rounded-lg justify-normal">
           {/* Photo frame */}
           <div className="relative h-48 sm:h-72 md:h-44 lg:h-48 xl:h-56 w-full">
-            {hovered ==index ? (
+            {hovered == index && card.short_screenshots ? (
               <div className="relative h-full">
                 <ImageCarousel short_screenshots={card.short_screenshots} />
-                </div>
+              </div>
             ) : (
               <Image
-                src={card.short_screenshots[0]?.image || '/placeholder.png'}
+                src={card.short_screenshots[0] ? card.short_screenshots[0]?.image : '/placeholder.png'}
                 alt="gallery-0"
                 fill
                 objectFit="cover"
@@ -157,30 +128,32 @@ export const Card = React.memo(
             )}
           </div>
           {/* Title  */}
-          <h3 className="pl-1 ">
+          <h3 className="pl-1 text-4">
             {card.name}
           </h3>
 
 
           {/* released year and platforms row */}
           <div className="flex flex-row items-center justify-between px-1 w-full">
-            <h3 className="text-center text-lg text-white font-gramatikaExtraLight">{card.released.split("-")[0]}
+            <h3 className="text-center text-lg text-white font-gramatikaExtraLight">{card.released ? card.released.split("-")[0] : ''}
             </h3>
             <div className="flex flex-row gap-2">
-              {card.parent_platforms.map((platform) => (
-                <div key={platform.platform.id}>
-                  {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                  {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                </div>
-              ))}
+              {
+                card.parent_platforms &&
+                card.parent_platforms.map((platform) => (
+                  <div key={platform.platform.id} className="text-4">
+                    {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                  </div>
+                ))}
             </div>
           </div>
           <div className={cn("pt-3 bottom-1 w-full px-1", index != hovered && "hidden")}>
@@ -210,7 +183,7 @@ export const Card = React.memo(
 
             {
               <div className="flex flex-row pt-2 overflow-x-clip text-nowrap">
-                {card.tags.map((tag) => (
+                {card.tags && card.tags.map((tag) => (
                   <div key={tag.id} className="px-1 py-1 rounded-full text-xs font-gramatikaExtraLight text-3 whitespace-nowrap transform transition-transform duration-300 hover:translate-x-2">
                     {tag.name}
                   </div>
@@ -253,15 +226,17 @@ export function FocusCards({ cards }: { cards: GameData[] }) {
 
   return (
     <div className="flex w-full justify-center h-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-9 gap-y-24">
         {cards.map((card, index) => (
-          <Card
-            key={card.name}
-            card={card}
-            index={index}
-            hovered={hovered}
-            setHovered={setHovered}
-          />
+          card.name && (
+            <Card
+              key={card.name}
+              card={card}
+              index={index}
+              hovered={hovered}
+              setHovered={setHovered}
+            />
+          )
         ))}
       </div>
     </div>

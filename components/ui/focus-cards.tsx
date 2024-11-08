@@ -11,10 +11,19 @@ import CircleButton from "../CircleButton";
 import GoatSvg from './goat.svg';
 import { FaMeh } from "react-icons/fa";
 import ImageCarousel from "./ImageCarousel";
+import { useRouter } from "next/navigation";
 
 interface ShortScreenshots {
   id: number;
   image: string;
+}
+
+interface screenshots {
+  id:number;
+  image:string;
+  width:number;
+  height: number;
+  is_deleted : boolean;
 }
 
 interface ratings {
@@ -52,7 +61,22 @@ interface tags {
   image_background: string;
 }
 
+interface developers {
+  id: number;
+  name: string;
+  slug: string;
+  games_count : number;
+  image_background: string;
+}
+
+interface esrb_rating {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export interface GameData {
+  id: number;
   name: string;
   slug: string;
   playtime: number;
@@ -64,6 +88,15 @@ export interface GameData {
   released: string;
   ratings: ratings[];
   tags: tags[];
+  background_image: string;
+  rating: number;
+  developers : developers[];
+  esrb_rating : esrb_rating;
+  description_raw: string;
+  website: string;
+  screenshots : screenshots[];
+
+  
 }
 
 
@@ -79,6 +112,7 @@ export const Card = React.memo(
     hovered: number | null;
     setHovered: React.Dispatch<React.SetStateAction<number | null>>;
   }) => {
+    const router = useRouter()
 
     useEffect(() => {
       const handleScroll = () => {
@@ -97,6 +131,7 @@ export const Card = React.memo(
       <div
         onMouseEnter={() => setHovered(index)}
         onMouseDown={() => setHovered(index)}
+        onClick={()=> router.push(`/game/${card.id}`)}
         key={index}
         onMouseLeave={() => setHovered(null)}
         className={cn(

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Hero from "@/components/Hero";
 
 const gramatikaBold = localFont({
   src: "./fonts/gramatikaBold.otf",
@@ -38,7 +39,11 @@ export default function RootLayout({
       <body
         className={`${gramatikaBold.variable} ${gramatikaBlack.variable} ${gramatikaExtraLight.variable} ${gramatikaRegular.variable} bg-background antialiased`}
       >
+        <div>
+        <Hero />
         {children}
+        </div>
+        
       </body>
     </html>
   );

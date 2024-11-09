@@ -206,6 +206,7 @@ export function PlaceholdersAndVanishInput({
                 }}
                 onKeyDown={handleKeyDown}
                 ref={inputRef}
+                name="search"
                 value={value}
                 type="text"
                 className={cn(

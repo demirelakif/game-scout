@@ -1,11 +1,14 @@
 'use client'
-import { fetchGameById, fetchGames } from "@/app/action";
+import { fetchGameById } from "@/app/action";
 import CircleButton from "@/components/CircleButton";
 import { GameData } from "@/components/ui/focus-cards";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from 'react'
-import { FaHeart, FaMeh, FaPlus, FaThumbsDown } from "react-icons/fa";
+import { FaHeart, FaMeh, FaReddit, FaThumbsDown } from "react-icons/fa";
+import { MdWebStories } from "react-icons/md";
+import { SiMetacritic } from "react-icons/si";
 
 export default function DetailPage() {
     const [game, setGame] = useState<GameData>();
@@ -43,7 +46,7 @@ export default function DetailPage() {
                 <div className="font-gramatikaBlack text-4 text-3xl pb-5">
                     {game?.name}
                     <p className="text-3 font-gramatikaRegular text-lg -mt-2">
-                        {game?.developers.map((developer)=>developer.name)}
+                        {game?.developers.map((developer, index) => developer.name + (index < game.developers.length - 1 ? ", " : ""))}
                     </p>
                 </div>
                 {/* main image and gallery */}
@@ -109,32 +112,48 @@ export default function DetailPage() {
                                         alt="goat"
                                     />
                                 </CircleButton>
-                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings[0].count}</h4>
+                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings?.[0]?.count ?? 0}</h4>
                             </div>
                             <div className="flex-col">
                                 <CircleButton onText="Like" classname="w-10 h-10">
                                     <FaHeart color="#FF4D4D" />
                                 </CircleButton>
-                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings[1].count}</h4>
+                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings?.[1]?.count ?? 0}</h4>
                             </div>
                             <div className="flex-col">
                                 <CircleButton onText="Meh" classname="w-10 h-10">
                                     <FaMeh color="#B0BEC5" />
                                 </CircleButton>
-                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings[3].count}</h4>
+                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings?.[3]?.count ?? 0}</h4>
                             </div>
                             <div className="flex-col">
                                 <CircleButton onText="Dislike" classname="w-10 h-10">
                                     <FaThumbsDown color="#B22222" />
                                 </CircleButton>
-                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings[2].count}</h4>
+                                <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings?.[2]?.count ?? 0}</h4>
                             </div>
                         </div>
-                        <div className="sm:order-2 md:text-xl md:order-1 lg:order-1">
-                            a
+                        <div className="sm:order-2 md:text-xl md:order-1 lg:order-1 flex flex-col gap-4">
+                            <a href={game?.metacritic_url}className={cn("py-2 bg-2 rounded-3xl flex flex-row gap-2 items-center px-2 justify-start",game?.metacritic_url ? "": "hidden")}>
+                                <SiMetacritic color="#FAB12F" size={36} />
+                                <h1 className="text-2xl font-gramatikaBold text-4">Metacritic</h1>
+                            </a>
+                            <a href={game?.reddit_url} className={cn("py-2 bg-2 rounded-3xl flex flex-row gap-2 items-center px-2 justify-start",game?.reddit_url ? "":"hidden")}>
+                                <FaReddit color="#FF4500" size={36} />
+                                <h1 className="text-2xl font-gramatikaBold text-4">Reddit</h1>
+                            </a>
+                            <a href={game?.website} className={cn("py-2 bg-2 rounded-3xl flex flex-row gap-2 items-center px-2 justify-start",game?.reddit_url ? "":"hidden")}>
+                                <MdWebStories color="#FFFF" size={36} />
+                                <h1 className="text-2xl font-gramatikaBold text-4">Website</h1>
+                            </a>
                         </div>
                         <div className="sm:order-3 md:text-xl md:order-3 lg:order-2">
-                            b
+                            {game?.platforms[0].requirements.recommended ?? ""}
+                            {/* {game?.parent_platforms.map((platform)=>(
+                                <div key={platform.platform.id} className="flex items-center gap-2">
+                                    <h1 className="text-2xl font-gramatikaBold text-4">{platform.platform.name}</h1>
+                                </div>
+                            ))} */}
                         </div>
                     </section>
 

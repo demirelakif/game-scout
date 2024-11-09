@@ -49,8 +49,14 @@ interface Platform {
   slug: string;
 }
 
+interface requirements {
+  minimum:string;
+  recommended: string;
+}
+
 interface PlatformInfo {
   platform: Platform;
+  requirements: requirements;
 }
 interface tags {
   id: number;
@@ -95,6 +101,10 @@ export interface GameData {
   description_raw: string;
   website: string;
   screenshots : screenshots[];
+  metacritic_url:string;
+  reddit_url :string;
+  
+  
 
   
 }
@@ -236,10 +246,12 @@ export const Card = React.memo(
         <div
           className={cn(
             "absolute z-10 -top-3 -right-3 h-10 w-10 lg:-top-4 lg:-right-4 md:-top-3  md:-right-3 rounded-full md:w-12 md:h-12 lg:h-16 lg:w-16 flex items-center justify-center", // w-12 ve h-12 ekledik
-            card.metacritic > 90 && "bg-green-600",
-            card.metacritic > 80 && card.metacritic < 90 && "bg-green-400",
-            card.metacritic < 80 && card.metacritic > 70 && "bg-yellow-500",
-            card.metacritic < 70 && "bg-red-500"
+            card.metacritic >= 90 && "bg-green-600",
+            card.metacritic >= 80 && card.metacritic < 90 && "bg-lime-600",
+            card.metacritic < 80 && card.metacritic >= 70 && "bg-yellow-500",
+            card.metacritic < 70 && card.metacritic >= 60 && "bg-red-400",
+            card.metacritic < 60 && "bg-red-600",
+            card.metacritic === null && "hidden"
           )}
         >
           <h3 className="text-center text-white font-gramatikaBold">{card.metacritic}</h3>

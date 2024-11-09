@@ -41,3 +41,18 @@ export const fetchVideos = async (id:string) => {
     const results = await response.json();
     return results;
 }
+
+export const searchGame = async ({
+    name,
+    orderBy,
+    isOrderPlus,
+}: {
+    name: string;
+    orderBy?: string;
+    isOrderPlus: boolean;
+}) => {
+    const response = await fetch(`https://api.rawg.io/api/games?key=${api_key}&search=${name}&ordering=${isOrderPlus ? '' : '-'}${orderBy ? orderBy.toLocaleLowerCase() : ''}`);
+
+    const results = await response.json();
+    return results["results"];
+}

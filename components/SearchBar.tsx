@@ -1,8 +1,20 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PlaceholdersAndVanishInput } from './ui/placeholders-and-vanish-input'
+import { GameData } from './ui/focus-cards';
+import { searchGame } from '@/app/action';
 
-function SearchBar() {
+function SearchBar({
+    setData,
+    orderBy,
+    isOrderPlus
+}:
+    {
+        setData: (value: GameData[]) => void;
+        orderBy: string;
+        isOrderPlus: boolean;
+
+    }) {
     const placeholders = [
         "GTA 5",
         "Mafia 3",
@@ -12,11 +24,26 @@ function SearchBar() {
     ];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
+        setSearchText(e.target.value);
+
+
     };
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const [searchText, setSearchText] = useState("");
+
+    useEffect(() => {
+        searchGame({ name: searchText, isOrderPlus: isOrderPlus, orderBy: orderBy }).then((data_) => setData(data_));
+    }, [orderBy, isOrderPlus])
+
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("submitted");
+
+        const formData = new FormData(e.currentTarget);
+        const searchValue = formData.get('search') as string;
+
+        if (searchValue) {
+            await searchGame({ name: searchValue, isOrderPlus: isOrderPlus, orderBy: orderBy }).then((data_) => setData(data_));
+        }
     };
     return (
         <div className='w-[45vw] sm:w-fit'>

@@ -8,7 +8,6 @@ import SearchAndDropdown from './SearchAndDropdown';
 
 let pageCount = 1;
 const delay = 500;
-let first = true;
 
 export default function GameLists() {
     const [data, setData] = useState<GameData[]>([])

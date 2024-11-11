@@ -3,11 +3,12 @@ import { cn } from '@/lib/utils'
 import { BackgroundBeamsWithCollision } from './ui/background-beams-with-collision'
 import Image from 'next/image'
 import SearchBar from './SearchBar'
+import Link from 'next/link'
 
 const Hero = () => {
   return (
     <BackgroundBeamsWithCollision className='max-h-[20vh]'>
-      <a href='/'>
+      <Link href='/'>
         <div className='flex items-center'>
           <h2 className="text-4xl pr-2 md:pr-4 relative z-20 md:text-6xl font-bold text-center text-4 dark:text-white font-gramatikaBlack tracking-tight">
             Game{" "}
@@ -28,7 +29,7 @@ const Hero = () => {
             className="w-11 h-11 md:w-20 md:h-20"
           />
         </div>
-      </a>
+      </Link>
     </BackgroundBeamsWithCollision>
   )
 }

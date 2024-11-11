@@ -7,7 +7,7 @@ import Image from 'next/image';
 import SearchAndDropdown from './SearchAndDropdown';
 
 let pageCount = 1;
-let delay = 500;
+const delay = 500;
 let first = true;
 
 export default function GameLists() {

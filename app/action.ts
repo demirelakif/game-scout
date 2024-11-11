@@ -56,3 +56,5 @@ export const searchGame = async ({
     const results = await response.json();
     return results["results"];
 }
+
+

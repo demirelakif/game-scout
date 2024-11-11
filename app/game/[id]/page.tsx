@@ -100,8 +100,8 @@ export default function DetailPage() {
                     </section>
 
                     {/*game details if mobile its 1 col if its not 2 col  */}
-                    <section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 ">
-                        <div className="flex justify-end md:justify-end gap-3 md:text-2xl xl:order-3 md:order-2 sm:order-1 text-3xl ">
+                    <section className="grid md:grid-cols-2 xl:grid-cols-3">
+                        <div className="grid grid-flow-col auto-rows-max grid-rows-1 justify-evenly text-xl md:justify-evenly pl-1 gap-3 md:text-2xl xl:order-2 md:order-2 sm:order-1 order-1">
                             {/* ratings from users */}
                             <div className="flex-col">
                                 <CircleButton onText="GOAT" classname="w-10 h-10">
@@ -133,7 +133,7 @@ export default function DetailPage() {
                                 <h4 className="text-center text-xl font-gramatikaBold text-4">{game?.ratings?.[2]?.count ?? 0}</h4>
                             </div>
                         </div>
-                        <div className="sm:order-2 md:text-xl md:order-1 lg:order-1 flex flex-col gap-4">
+                        <div className="sm:order-2 md:text-xl md:order-1 lg:order-1 xl:order-1 flex flex-col gap-4">
                             <a href={game?.metacritic_url}className={cn("py-2 bg-2 rounded-3xl flex flex-row gap-2 items-center px-2 justify-start",game?.metacritic_url ? "": "hidden")}>
                                 <SiMetacritic color="#FAB12F" size={36} />
                                 <h1 className="text-2xl font-gramatikaBold text-4">Metacritic</h1>
@@ -147,7 +147,10 @@ export default function DetailPage() {
                                 <h1 className="text-2xl font-gramatikaBold text-4">Website</h1>
                             </a>
                         </div>
-                        <div className="sm:order-3 md:text-xl md:order-3 lg:order-2">
+                        <div className="sm:order-3 md:text-xl md:order-3 lg:order-2 text-4 font-gramatikaRegular text-pretty pl-3">
+                            <h1 className="font-gramatikaBold text-3">System Requirements:</h1>
+                            {game?.platforms[0].requirements.minimum ?? ""}
+                            <br /> <br />
                             {game?.platforms[0].requirements.recommended ?? ""}
                             {/* {game?.parent_platforms.map((platform)=>(
                                 <div key={platform.platform.id} className="flex items-center gap-2">

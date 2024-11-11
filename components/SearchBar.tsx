@@ -4,6 +4,8 @@ import { PlaceholdersAndVanishInput } from './ui/placeholders-and-vanish-input'
 import { GameData } from './ui/focus-cards';
 import { searchGame } from '@/app/action';
 
+let firstTime = 2;
+
 function SearchBar({
     setData,
     orderBy,
@@ -32,6 +34,10 @@ function SearchBar({
     const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
+        if (firstTime > 0 || orderBy=="Popular") {
+            firstTime --;
+            return;
+        } // first rendera ayrılır
         searchGame({ name: searchText, isOrderPlus: isOrderPlus, orderBy: orderBy }).then((data_) => setData(data_));
     }, [orderBy, isOrderPlus])
 

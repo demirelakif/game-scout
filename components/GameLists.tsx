@@ -19,50 +19,50 @@ export default function GameLists() {
     const [isOrderPlus, setIsOrderPlus] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!searchData[0]) {
+        if (inView) {
             setIsLoading(true);
             const timeoutId = setTimeout(() => {
                 fetchGames({ page: pageCount, orderBy: orderBy, isOrderPlus }).then((games) => {
+                    console.log("Burasi ilk fetch yeri")
                     setData([...data, ...games])
                     pageCount++;
                 });
                 setIsLoading(false)
             }, delay);
-        }else{
-            setData(searchData)
+            return () => clearTimeout(timeoutId);
         }
 
-    }, [inView,searchData])
+
+    }, [inView])
+
+
     useEffect(() => {
-        if (first) {
-            first = false;
-            return;
+        if (searchData[0]) {
+            setIsLoading(true);
+            const timeoutId = setTimeout(() => {
+                setData(searchData);
+                console.log("Burasi search set yeri")
+                setIsLoading(false)
+            }, delay - 200);
+            return () => clearTimeout(timeoutId);
         }
+
+    }, [searchData])
+    useEffect(() => {
         setIsLoading(true);
         const timeoutId = setTimeout(() => {
-            fetchGames({ page: pageCount, orderBy: orderBy, isOrderPlus }).then((games) => {
-                setData([games])
+            fetchGames({ page: 1, orderBy: orderBy, isOrderPlus }).then((games) => {
+                setData(games);  // Verileri doğrudan ayarlayın
+                console.log("Burasi 2. fetch yeri");
                 pageCount = 1;
             });
-            setIsLoading(false)
+            setIsLoading(false);
         }, delay);
 
-    }, [orderBy, isOrderPlus])
+        // Temizleme işlemi
+        return () => clearTimeout(timeoutId);
+    }, [orderBy, isOrderPlus]); // Sadece orderBy ve isOrderPlus değişimlerine yanıt ver
 
-    // useEffect(() => {
-    //     if (first) {
-    //         first = false;
-    //         return;
-    //     }
-    //     setIsLoading(true);
-    //     const timeoutId = setTimeout(() => {
-    //         searchGame(searchQuery).then((games) => {
-    //             setData([games])
-    //         });
-    //         setIsLoading(false)
-    //     }, delay);
-
-    // }, [searchQuery])
 
     return (
         <div className='py-20'>

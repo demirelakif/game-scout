@@ -8,7 +8,7 @@ import Link from 'next/link'
 const Hero = () => {
   return (
     <BackgroundBeamsWithCollision className='max-h-[20vh]'>
-      <Link href='/'>
+      <Link href='/' >
         <div className='flex items-center'>
           <h2 className="text-4xl pr-2 md:pr-4 relative z-20 md:text-6xl font-bold text-center text-4 dark:text-white font-gramatikaBlack tracking-tight">
             Game{" "}

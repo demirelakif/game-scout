@@ -18,7 +18,7 @@ export default function DetailPage() {
 
     useEffect(() => {
         setisLoading(true);
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             fetchGameById(id as string).
                 then((g) => {
                     setGame(g)
@@ -26,7 +26,7 @@ export default function DetailPage() {
                 });
             setisLoading(false);
         }, 2000);
-
+        return () => clearTimeout(timeoutId);
     }, [])
 
     if (isLoading) {

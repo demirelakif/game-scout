@@ -2,15 +2,22 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 import re
+import os
 
-# PostgreSQL bağlantı bilgileri
-conn = psycopg2.connect(
-    host="localhost",
-    database="game_test",
-    user="postgres",
-    password="demirelakif"
-)
-cur = conn.cursor()
+# PostgreSQL bağlantı URL'sini al (POSTGRES_URL çevre değişkeninden)
+
+
+# Veritabanına bağlan
+try:
+    conn = psycopg2.connect(DATABASE_URL)
+    cur = conn.cursor()
+    print("Veritabanı bağlantısı başarılı.")
+    
+    # Burada gerekli sorguları veya işlemleri yapabilirsiniz
+    
+except psycopg2.DatabaseError as e:
+    print(f"Veritabanına bağlanırken hata oluştu: {e}")
+
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"

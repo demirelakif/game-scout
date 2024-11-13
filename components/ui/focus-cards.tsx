@@ -12,6 +12,7 @@ import GoatSvg from './goat.svg';
 import { FaMeh } from "react-icons/fa";
 import ImageCarousel from "./ImageCarousel";
 import { useRouter } from "next/navigation";
+import { GiPirateFlag } from "react-icons/gi";
 
 interface ShortScreenshots {
   id: number;
@@ -81,6 +82,15 @@ interface esrb_rating {
   slug: string;
 }
 
+interface dbRows {
+  id : number;
+  name: string;
+  achievement_url : string;
+  torrent_url : string;
+  xbox : boolean;
+  torrent : boolean;
+}
+
 export interface GameData {
   id: number;
   name: string;
@@ -103,6 +113,7 @@ export interface GameData {
   screenshots : screenshots[];
   metacritic_url:string;
   reddit_url :string;
+  dbRows : dbRows;
   
   
 
@@ -145,7 +156,7 @@ export const Card = React.memo(
         key={index}
         onMouseLeave={() => setHovered(null)}
         className={cn(
-          "rounded-lg relative bg-2 h-[35vh] sm:h-[42vh] w-[80vw] md:h-[30vh] md:w-[28vw] lg:h-[35vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer ",
+          "rounded-lg relative bg-2 h-[35vh] sm:h-[42vh] w-[80vw] md:h-[31vh] md:w-[28vw] lg:h-[36vh] lg:w-[20vw] transition-all duration-100 ease-out cursor-pointer",
           hovered !== null && hovered === index
 
           && "scale-[1.2] transition-all duration-100 ease-linear z-10 h-[38vh] sm:h-[52vh] md:h-[35vh] lg:h-[42vh]",
@@ -187,22 +198,22 @@ export const Card = React.memo(
                 card.parent_platforms &&
                 card.parent_platforms.map((platform) => (
                   <div key={platform.platform.id} className="text-4">
-                    {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
-                    {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-7 lg:h-7 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "playstation" && (<FaPlaystation className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "ios" && (<FaApple className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "android" && (<DiAndroid className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "nintendo" && (<SiNintendoswitch className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "pc" && (<FaComputer className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "xbox" && (<FaXbox className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "web" && (<FaInternetExplorer className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "mac" && (<MdOutlineDesktopMac className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "sega" && (<SiSega className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
+                    {platform.platform.slug === "linux" && (<FaLinux className={cn("md:w-5 md:h-5 lg:w-6 lg:h-6 w-4 h-4 sm:w-6 sm:h-6")} />)}
                   </div>
                 ))}
             </div>
           </div>
-          <div className={cn("pt-3 bottom-1 w-full px-1", index != hovered && "hidden")}>
-            <div className="flex justify-between bg-1 rounded-3xl">
+          <div className={cn("absolute bottom-1 w-full px-1", index != hovered && "hidden")}>
+            {/* <div className="flex justify-between bg-1 rounded-3xl">
               <CircleButton onText="Add">
                 <FaPlus />
               </CircleButton>
@@ -224,10 +235,10 @@ export const Card = React.memo(
               <CircleButton onText="Dislike">
                 <FaThumbsDown color="#B22222" />
               </CircleButton>
-            </div>
+            </div> */}
 
             {
-              <div className="flex flex-row pt-2 overflow-x-clip text-nowrap">
+              <div className="flex flex-row overflow-x-clip text-nowrap">
                 {card.tags && card.tags.map((tag) => (
                   <div key={tag.id} className="px-1 py-1 rounded-full text-xs font-gramatikaExtraLight text-3 whitespace-nowrap transform transition-transform duration-300 hover:translate-x-2">
                     {tag.name}
@@ -257,7 +268,18 @@ export const Card = React.memo(
           <h3 className="text-center text-white font-gramatikaBold">{card.metacritic}</h3>
         </div>
 
-
+          {
+            card.dbRows && index !=hovered && (
+              <div className={cn("absolute flex gap-4 justify-between top-0 px-3 py-3 bg-green-600 rounded-lg")}>
+                {
+                  card.dbRows.xbox  && (<FaXbox color="white"/>)
+                }
+                {
+                  card.dbRows.torrent  && (<GiPirateFlag color="white"/>)
+                }
+            </div>
+            )
+          }
 
       </div>
     )

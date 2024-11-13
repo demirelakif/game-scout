@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { FocusCards, GameData } from './ui/focus-cards';
-import { fetchGames } from '@/app/action';
+import { fetchGames, orderByGamepass } from '@/app/action';
 import { useInView } from "react-intersection-observer";
 import Image from 'next/image';
 import SearchAndDropdown from './SearchAndDropdown';
@@ -9,7 +9,7 @@ import SearchAndDropdown from './SearchAndDropdown';
 let pageCount = 1;
 const delay = 500;
 
-export default function GameLists() {
+export default function HowToGetList() {
     const [data, setData] = useState<GameData[]>([])
     const [searchData, setSearchData] = useState<GameData[]>([])
     const [isLoading, setIsLoading] = useState(false)
@@ -21,7 +21,7 @@ export default function GameLists() {
         if (inView) {
             setIsLoading(true);
             const timeoutId = setTimeout(() => {
-                fetchGames({ page: pageCount, orderBy: orderBy, isOrderPlus }).then((games) => {
+                orderByGamepass({ page: pageCount, orderBy: orderBy, isOrderPlus }).then((games) => {
                     console.log("Burasi ilk fetch yeri")
                     setData([...data, ...games])
                     pageCount++;
@@ -50,7 +50,7 @@ export default function GameLists() {
     useEffect(() => {
         setIsLoading(true);
         const timeoutId = setTimeout(() => {
-            fetchGames({ page: 1, orderBy: orderBy, isOrderPlus }).then((games) => {
+            orderByGamepass({ page: 1, orderBy: orderBy, isOrderPlus }).then((games) => {
                 setData(games);  // Verileri doğrudan ayarlayın
                 console.log("Burasi 2. fetch yeri");
                 pageCount = 2;

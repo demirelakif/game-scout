@@ -52,7 +52,7 @@ function SearchBar({
         }
     };
     return (
-        <div className='w-[45vw] sm:w-fit'>
+        <div className='w-[26vw] sm:w-fit'>
             <PlaceholdersAndVanishInput
                 placeholders={placeholders}
                 onChange={handleChange}
